@@ -4,9 +4,73 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlogExporter.Shell"
+        xmlns:viewModel="clr-namespace:BlogExporter.Shell.ViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+    </Window.Resources>
+
+    <Grid DataContext="{Binding Main, Source={StaticResource Locator}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ToolBar Grid.Row="0">
+            <Label>URL:</Label>
+            <TextBox Width="400" Text="{Binding URL,UpdateSourceTrigger=PropertyChanged}" />
+            <Button Command="{Binding LoadUrlCommand}">Go</Button>
+        </ToolBar>
+        <TreeView Grid.Row="1" MinHeight="150"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  ItemsSource="{Binding CatalogCollectionView}">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type viewModel:CatalogNodeViewModel}"
+                                              ItemsSource="{Binding ArticlesCollectionView}">
+
+                    <StackPanel Orientation="Horizontal">
+                        <!--<CheckBox Checked="{Binding IsChecked ,Converter={StaticResource BooleanToVisibilityConverter}}" />-->
+                        <TextBlock Text="T:" Background="LightCoral" />
+                        <TextBlock Text="{Binding Title}" Focusable="True" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type viewModel:ArticleViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <!--<CheckBox Checked="{Binding IsChecked ,Converter={StaticResource BooleanToVisibilityConverter}}" />-->
+                        <TextBlock Text="A:" Background="LightCoral" />
+                        <TextBlock Text="{Binding Title}" Focusable="True" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+                      Height="4"
+                      Background="LightSkyBlue" />
+        <Grid Row="2" MinHeight="100">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Command="{Binding ParseUrlCommand}">Parse</Button>
+            <RichTextBox Grid.Row="1" FontFamily="Arial">
+                <FlowDocument>
+                    <Paragraph>
+                        <Run Text="{Binding Content}" />
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+        </Grid>
+        <StatusBar Grid.Row="3">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ProgressBar Grid.Column="1" Value="60" Height="30" Width="100" />
+            </Grid>
+        </StatusBar>
     </Grid>
 </Window>
