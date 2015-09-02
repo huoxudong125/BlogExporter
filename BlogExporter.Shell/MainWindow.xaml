@@ -18,7 +18,8 @@
         <ToolBar Grid.Row="0">
             <Label VerticalAlignment="Center">URL:</Label>
             <TextBox Width="400" Text="{Binding URL,UpdateSourceTrigger=PropertyChanged}" />
-            <Button Command="{Binding LoadUrlCommand}" Style="{StaticResource CircleButtonStyle}" >Go</Button>
+            <Button Command="{Binding LoadUrlCommand}" Width="30" Height="30" 
+                    Style="{StaticResource CircleButton}" Background="#FF499E1E" >Go</Button>
         </ToolBar>
         <ScrollViewer Grid.Row="1" Style="{StaticResource for_scrollviewer}"
                       HorizontalAlignment="Stretch"
@@ -56,8 +57,8 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <ToolBar Grid.Row="0">
-                <Button  Command="{Binding ParseUrlCommand}" Style="{StaticResource MetroButton}">Analyse</Button>
-                <Button Command="{Binding ExportCommand}" Style="{StaticResource MetroButton}">Export</Button>
+                <Button  Command="{Binding ParseUrlCommand}" Style="{StaticResource NewGameButtonStyle}">Analyse</Button>
+                <Button Command="{Binding ExportCommand}" Style="{StaticResource NewGameButtonStyle}">Export</Button>
             </ToolBar>
             <RichTextBox Grid.Row="1" FontFamily="Arial">
                 <FlowDocument>
@@ -73,7 +74,8 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ProgressBar Grid.Column="1" Value="60" Height="30" Width="100" />
+                <ProgressBar Grid.Column="1" Value="60" Height="30" Width="100" 
+                             Style="{StaticResource GreenProgessStyleGreenProgessStyle}" />
             </Grid>
         </StatusBar>
     </Grid>
