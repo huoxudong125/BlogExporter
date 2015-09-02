@@ -1,4 +1,5 @@
 # BlogExporter
+[![Build status](https://ci.appveyor.com/api/projects/status/3qhsp3oqexbvpnvb?svg=true)](https://ci.appveyor.com/project/huoxudong125/blogexporter)
 
 ##Resources   
 
