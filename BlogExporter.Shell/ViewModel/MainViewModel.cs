@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
+using Blog.Process;
 using BlogExporter.Shell.Utility;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -38,7 +41,7 @@ namespace BlogExporter.Shell.ViewModel
         {
             LoadUrlCommand = new RelayCommand(OnLoadUrl);
             ParseUrlCommand = new RelayCommand(OnParseUrl, () => !string.IsNullOrEmpty(URL));
-            ExportCommand=new RelayCommand(OnExport);
+            ExportCommand = new RelayCommand(OnExport);
 
             _catalogObservableList = new ObservableCollection<CatalogNodeViewModel>();
             CatalogCollectionView = new ListCollectionView(_catalogObservableList);
@@ -63,8 +66,6 @@ namespace BlogExporter.Shell.ViewModel
                 URL = "http://www.cnblogs.com/artech/default.html?page=1";
             }
         }
-
-      
 
         public ICommand LoadUrlCommand { get; private set; }
         public ICommand ParseUrlCommand { get; private set; }
@@ -128,9 +129,9 @@ namespace BlogExporter.Shell.ViewModel
                 var atricles = day.CssSelect("div.postTitle");
                 foreach (var atricle in atricles)
                 {
-                    var articleModle = new ArticleViewModel() {Title = atricle.InnerText.ClearNotWords()};
-                    var articleTitleEl= atricle.CssSelect("a.postTitle2");
-                    articleModle.URL= articleTitleEl.First().Attributes["href"].Value;
+                    var articleModle = new ArticleViewModel() { Title = atricle.InnerText.ClearNotWords() };
+                    var articleTitleEl = atricle.CssSelect("a.postTitle2");
+                    articleModle.URL = articleTitleEl.First().Attributes["href"].Value;
                     catalog.AddArticle(articleModle);
                 }
             }
@@ -148,7 +149,37 @@ namespace BlogExporter.Shell.ViewModel
 
         private void OnExport()
         {
-            throw new NotImplementedException();
+            var articles = new List<ArticleViewModel>();
+            var web = new WebUtility();
+            foreach (var catalog in _catalogObservableList)
+            {
+                foreach (var article in catalog.ArticlesCollectionView)
+                {
+                    articles.Add(article as ArticleViewModel);
+                }
+            }
+
+            Content = string.Empty;
+            foreach (var articleViewModel in articles)
+            {
+                Content += string.Format("{0} {1} ({2}) {0}",Environment.NewLine,articleViewModel.Title,articleViewModel.URL);
+                
+            
+                web.URL = articleViewModel.URL;
+                string content = web.Get();
+
+                var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp");
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+                var filePath = Path.Combine(folder, articleViewModel.Title.ToValidFileName() + ".htm");
+                using (var file = new StreamWriter(filePath, false))
+                {
+                    file.Write(content);
+                    file.Close();
+                }
+            }
         }
 
         #endregion private function

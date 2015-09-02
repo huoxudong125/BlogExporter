@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlogExporter.Shell.Utility
 {
@@ -11,6 +7,15 @@ namespace BlogExporter.Shell.Utility
         public static string ClearNotWords(this string str)
         {
             return str.Replace(@"\t", String.Empty).Replace(@"\n", String.Empty).Trim();
+        }
+
+        public static string ToValidFileName(this string fileName)
+        {
+            foreach (char c in System.IO.Path.GetInvalidFileNameChars())
+            {
+                fileName = fileName.Replace(c, '_');
+            }
+            return fileName;
         }
     }
 }
