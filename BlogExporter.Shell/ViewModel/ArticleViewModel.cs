@@ -15,6 +15,9 @@ namespace BlogExporter.Shell.ViewModel
         private string _content;
         private string _publishTimeStamp;
         private bool _isChecked;
+        private string _url;
+        private bool _isLoaded;
+
         /// <summary>
         /// Initializes a new instance of the ArchiveViewModel class.
         /// </summary>
@@ -52,5 +55,16 @@ namespace BlogExporter.Shell.ViewModel
             set { Set(() => IsChecked, ref _isChecked, value); }
         }
 
+        public string URL
+        {
+            get { return _url; }
+            set { Set(() => URL, ref _url, value); }
+        }
+
+        public bool IsLoaded
+        {
+            get { return _isLoaded; }
+            set { Set(() => IsLoaded, ref _isLoaded, value); }
+        }
     }
 }

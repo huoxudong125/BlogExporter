@@ -43,6 +43,7 @@
                             <CheckBox IsChecked="{Binding IsChecked}" />
                             <TextBlock Text="A:" Background="LightCoral" />
                             <TextBlock Text="{Binding Title}" Focusable="True" />
+                            <TextBox Text="{Binding URL}"/>
                         </StackPanel>
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>

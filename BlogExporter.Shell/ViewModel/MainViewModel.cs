@@ -128,7 +128,10 @@ namespace BlogExporter.Shell.ViewModel
                 var atricles = day.CssSelect("div.postTitle");
                 foreach (var atricle in atricles)
                 {
-                    catalog.AddArticle(new ArticleViewModel() { Title = atricle.InnerText.ClearNotWords() });
+                    var articleModle = new ArticleViewModel() {Title = atricle.InnerText.ClearNotWords()};
+                    var articleTitleEl= atricle.CssSelect("a.postTitle2");
+                    articleModle.URL= articleTitleEl.First().Attributes["href"].Value;
+                    catalog.AddArticle(articleModle);
                 }
             }
         }
