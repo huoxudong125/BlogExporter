@@ -95,10 +95,10 @@
     </ApplicationDefinition>
     <Compile Include="Utility\StringExtend.cs" />
     <Compile Include="ViewModel\ArticleViewModel.cs" />
+    <Compile Include="ViewModel\CatalogNodeViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModel\CatalogNodeViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -112,6 +112,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\ButtonDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DefaultDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ScrollViewerStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
