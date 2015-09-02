@@ -18,7 +18,7 @@
         <ToolBar Grid.Row="0">
             <Label VerticalAlignment="Center">URL:</Label>
             <TextBox Width="400" Text="{Binding URL,UpdateSourceTrigger=PropertyChanged}" />
-            <Button Command="{Binding LoadUrlCommand}" Width="30" Height="30" 
+            <Button Command="{Binding LoadUrlCommand}" Width="30" Height="30"
                     Style="{StaticResource CircleButton}" Background="#FF499E1E" >Go</Button>
         </ToolBar>
         <ScrollViewer Grid.Row="1" Style="{StaticResource for_scrollviewer}"
@@ -43,7 +43,7 @@
                             <CheckBox IsChecked="{Binding IsChecked}" />
                             <TextBlock Text="A:" Background="LightCoral" />
                             <TextBlock Text="{Binding Title}" Focusable="True" />
-                            <TextBox Text="{Binding URL}"/>
+                            <TextBox Text="{Binding URL}" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>
@@ -61,13 +61,12 @@
                 <Button  Command="{Binding ParseUrlCommand}" Style="{StaticResource NewGameButtonStyle}">Analyse</Button>
                 <Button Command="{Binding ExportCommand}" Style="{StaticResource NewGameButtonStyle}">Export</Button>
             </ToolBar>
-            <RichTextBox Grid.Row="1" FontFamily="Arial">
-                <FlowDocument>
-                    <Paragraph>
-                        <Run Text="{Binding Content}" />
-                    </Paragraph>
-                </FlowDocument>
-            </RichTextBox>
+
+            <TextBox Grid.Row="1"   FontFamily="Arial"
+                         HorizontalScrollBarVisibility="Auto"
+                         VerticalScrollBarVisibility="Auto"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Stretch" Text="{Binding Content}" />
         </Grid>
         <StatusBar Grid.Row="3">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -75,7 +74,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ProgressBar Grid.Column="1" Value="60" Height="30" Width="100" 
+                <ProgressBar Grid.Column="1" Value="60" Height="30" Width="100"
                              Style="{StaticResource GreenProgessStyleGreenProgessStyle}" />
             </Grid>
         </StatusBar>

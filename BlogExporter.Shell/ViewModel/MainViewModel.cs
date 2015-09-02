@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 using Blog.Process;
@@ -147,7 +148,7 @@ namespace BlogExporter.Shell.ViewModel
             Content = doc.DocumentNode.InnerHtml;
         }
 
-        private void OnExport()
+        private async void OnExport()
         {
             var articles = new List<ArticleViewModel>();
             var web = new WebUtility();
@@ -159,29 +160,70 @@ namespace BlogExporter.Shell.ViewModel
                 }
             }
 
+          await  DownLoad(articles, web);
+        }
+
+        private async Task DownLoad(List<ArticleViewModel> articles, WebUtility web)
+        {
             Content = string.Empty;
+
+
+            var progress = new Progress<DownloadStringTaskAsyncExProgress>();
+            progress.ProgressChanged += (s, e) =>
+            {
+                //MessageBox.Show(e.ProgressPercentage + "");
+                Content += e.Text + "";
+            };
             foreach (var articleViewModel in articles)
             {
-                Content += string.Format("{0} {1} ({2}) {0}",Environment.NewLine,articleViewModel.Title,articleViewModel.URL);
-                
-            
-                web.URL = articleViewModel.URL;
-                string content = web.Get();
+                var content =await LoadContent(web, articleViewModel,progress).ConfigureAwait(false);
+                await Task.Yield();
+                await SaveToFile(articleViewModel, content, progress).ConfigureAwait(false);
+            }
+        }
 
-                var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp");
-                if (!Directory.Exists(folder))
-                {
-                    Directory.CreateDirectory(folder);
-                }
-                var filePath = Path.Combine(folder, articleViewModel.Title.ToValidFileName() + ".htm");
-                using (var file = new StreamWriter(filePath, false))
-                {
-                    file.Write(content);
-                    file.Close();
-                }
+        private async Task<string> LoadContent(WebUtility web, ArticleViewModel articleViewModel
+            ,IProgress<DownloadStringTaskAsyncExProgress> progress)
+        {
+            progress.Report(new DownloadStringTaskAsyncExProgress()
+            {
+                Text = string.Format("{0} [Load] {1} ({2}) {0}", Environment.NewLine, articleViewModel.Title, articleViewModel.URL)
+            });
+       
+
+            web.URL = articleViewModel.URL;
+            string content = web.Get();
+            return content;
+        }
+
+        private static async Task SaveToFile(ArticleViewModel articleViewModel
+            , string content,IProgress<DownloadStringTaskAsyncExProgress> progress )
+        {
+            progress.Report(new DownloadStringTaskAsyncExProgress()
+            {
+                Text = string.Format("{0} [Save] {1} ({2}) {0}", Environment.NewLine, articleViewModel.Title, articleViewModel.URL)
+            });
+
+            var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp");
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+            var filePath = Path.Combine(folder, articleViewModel.Title.ToValidFileName() + ".htm");
+            using (var file = new StreamWriter(filePath, false))
+            {
+                await file.WriteAsync(content);
+                file.Close();
             }
         }
 
         #endregion private function
     }
+
+    public class DownloadStringTaskAsyncExProgress
+    {
+        public int ProgressPercentage { get; set; }
+        public string Text { get; set; }
+    }
+
 }
