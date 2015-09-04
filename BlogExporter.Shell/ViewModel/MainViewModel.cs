@@ -203,7 +203,7 @@ namespace BlogExporter.Shell.ViewModel
             });
 
             web.URL = articleViewModel.CurrentEntity.URL;
-            string content = web.Get();
+            string content = await Task.Run(()=> web.Get()).ConfigureAwait(false);
             return content;
         }
 

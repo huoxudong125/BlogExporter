@@ -66,7 +66,9 @@
                          HorizontalScrollBarVisibility="Auto"
                          VerticalScrollBarVisibility="Auto"
                          HorizontalAlignment="Stretch"
-                         VerticalAlignment="Stretch" Text="{Binding Content}" />
+                         VerticalAlignment="Stretch" 
+                     local:ScrollToEndBehavior.OnTextChanged="true"
+                     Text="{Binding Content}" />
         </Grid>
         <StatusBar Grid.Row="3">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
