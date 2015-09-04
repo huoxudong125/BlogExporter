@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using Blog.Common;
+using GalaSoft.MvvmLight;
 
 namespace BlogExporter.Shell.ViewModel
 {
@@ -10,61 +11,16 @@ namespace BlogExporter.Shell.ViewModel
     /// </summary>
     public class ArticleViewModel : ViewModelBase
     {
-        private string _title;
-        private string _id;
-        private string _content;
-        private string _publishTimeStamp;
-        private bool _isChecked;
-        private string _url;
-        private bool _isLoaded;
 
+        public Article CurrentEntity { get; set; }
         /// <summary>
         /// Initializes a new instance of the ArchiveViewModel class.
         /// </summary>
         public ArticleViewModel()
         {
+            CurrentEntity = new Article();
         }
 
-        public string Title
-        {
-            get { return _title; }
-            set { Set(() => Title, ref _title, value); }
-        }
-
-        public string Id
-        {
-            get { return _id; }
-            set { Set(() => Id, ref _id, value); }
-        }
-
-        public string Content
-        {
-            get { return _content; }
-            set { Set(() => Content, ref _content, value); }
-        }
-
-        public string PublishTimeStamp
-        {
-            get { return _publishTimeStamp; }
-            set { Set(() => PublishTimeStamp, ref _publishTimeStamp, value); }
-        }
-
-        public bool IsChecked
-        {
-            get { return _isChecked; }
-            set { Set(() => IsChecked, ref _isChecked, value); }
-        }
-
-        public string URL
-        {
-            get { return _url; }
-            set { Set(() => URL, ref _url, value); }
-        }
-
-        public bool IsLoaded
-        {
-            get { return _isLoaded; }
-            set { Set(() => IsLoaded, ref _isLoaded, value); }
-        }
+ 
     }
 }

@@ -7,7 +7,7 @@ using Blog.Process.Interfaces;
 
 namespace Blog.Process
 {
-    public class CnblogProcess:IBlogProcess,IExporter
+    public class CnblogProcess:IBlogProcess
     {
         public bool ParseCatalog()
         {
@@ -15,11 +15,6 @@ namespace Blog.Process
         }
 
         public bool ParseArticle()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Export()
         {
             throw new NotImplementedException();
         }

@@ -162,6 +162,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Blog.Common\Blog.Common.csproj">
+      <Project>{f932e34c-3005-4e15-b42b-46733ed1b4e3}</Project>
+      <Name>Blog.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Blog.Process\Blog.Process.csproj">
       <Project>{4c2dbc7c-eff7-49e5-add2-ce3285c0980f}</Project>
       <Name>Blog.Process</Name>

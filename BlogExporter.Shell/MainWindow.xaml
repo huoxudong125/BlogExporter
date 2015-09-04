@@ -32,14 +32,14 @@
                     <HierarchicalDataTemplate DataType="{x:Type viewModel:CatalogNodeViewModel}"
                                               ItemsSource="{Binding ArticlesCollectionView}">
 
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding Path=IsChecked }" />
+                        <StackPanel Orientation="Horizontal" DataContext="{Binding CurrentEntity}">
+                            <CheckBox IsChecked="{Binding IsChecked }" />
                             <TextBlock Text="T:" Background="LightCoral" />
                             <TextBlock Text="{Binding Title}" Focusable="True" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate DataType="{x:Type viewModel:ArticleViewModel}">
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal"  DataContext="{Binding CurrentEntity}">
                             <CheckBox IsChecked="{Binding IsChecked}" />
                             <TextBlock Text="A:" Background="LightCoral" />
                             <TextBlock Text="{Binding Title}" Focusable="True" />
@@ -74,8 +74,10 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ProgressBar Grid.Column="1" Value="60" Height="30" Width="100"
-                             Style="{StaticResource GreenProgessStyleGreenProgessStyle}" />
+                <ProgressBar Grid.Column="1" Height="25" Width="100" 
+                             Minimum="0" Maximum="1"
+                             Style="{StaticResource GreenProgessStyleGreenProgessStyle}" 
+                             Value="{Binding ProgressValue}"/>
             </Grid>
         </StatusBar>
     </Grid>

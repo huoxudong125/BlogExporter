@@ -34,6 +34,13 @@ namespace BlogExporter.Shell.ViewModel
         private readonly ObservableCollection<CatalogNodeViewModel> _catalogObservableList;
         private string _content;
         private string _url;
+        private double _progressValue;
+
+        public double ProgressValue
+        {
+            get { return _progressValue; }
+            set { Set(() => ProgressValue, ref _progressValue, value); }
+        }
 
         /// <summary>
         ///     Initializes a new instance of the MainViewModel class.
@@ -51,14 +58,12 @@ namespace BlogExporter.Shell.ViewModel
             {
                 // Code runs in Blend --> create design time data.
                 URL = "http://hqfz.cnblgos.com";
-                var catalog = new CatalogNodeViewModel
-                {
-                    Title = "Catalog1"
-                };
-                catalog.AddArticle(new ArticleViewModel()
-                {
-                    Title = "Article1"
-                });
+                var catalog = new CatalogNodeViewModel();
+                catalog.CurrentEntity.Title = "Catalog1";
+                var article = new ArticleViewModel();
+                article.CurrentEntity.Title = "Article1";
+                catalog.AddArticle(article);
+
                 _catalogObservableList.Add(catalog);
             }
             else
@@ -69,6 +74,7 @@ namespace BlogExporter.Shell.ViewModel
         }
 
         public ICommand LoadUrlCommand { get; private set; }
+
         public ICommand ParseUrlCommand { get; private set; }
 
         public ICommand ExportCommand { get; private set; }
@@ -120,19 +126,20 @@ namespace BlogExporter.Shell.ViewModel
             foreach (var day in days)
             {
                 var title = day.CssSelect("div.dayTitle").First();
-                var catalog = new CatalogNodeViewModel()
-                {
-                    Title = title.InnerText.ClearNotWords(),
-                    IsChecked = true
-                };
+                var catalog = new CatalogNodeViewModel();
+
+                catalog.CurrentEntity.Title = title.InnerText.ClearNotWords();
+                catalog.CurrentEntity.IsChecked = true;
+
                 _catalogObservableList.Add(catalog);
 
                 var atricles = day.CssSelect("div.postTitle");
                 foreach (var atricle in atricles)
                 {
-                    var articleModle = new ArticleViewModel() { Title = atricle.InnerText.ClearNotWords() };
+                    var articleModle = new ArticleViewModel();
+                    articleModle.CurrentEntity.Title = atricle.InnerText.ClearNotWords();
                     var articleTitleEl = atricle.CssSelect("a.postTitle2");
-                    articleModle.URL = articleTitleEl.First().Attributes["href"].Value;
+                    articleModle.CurrentEntity.URL = articleTitleEl.First().Attributes["href"].Value;
                     catalog.AddArticle(articleModle);
                 }
             }
@@ -151,7 +158,6 @@ namespace BlogExporter.Shell.ViewModel
         private async void OnExport()
         {
             var articles = new List<ArticleViewModel>();
-            var web = new WebUtility();
             foreach (var catalog in _catalogObservableList)
             {
                 foreach (var article in catalog.ArticlesCollectionView)
@@ -159,49 +165,57 @@ namespace BlogExporter.Shell.ViewModel
                     articles.Add(article as ArticleViewModel);
                 }
             }
-
-          await  DownLoad(articles, web);
-        }
-
-        private async Task DownLoad(List<ArticleViewModel> articles, WebUtility web)
-        {
-            Content = string.Empty;
-
-
             var progress = new Progress<DownloadStringTaskAsyncExProgress>();
+
+            int i = 0;
             progress.ProgressChanged += (s, e) =>
             {
                 //MessageBox.Show(e.ProgressPercentage + "");
                 Content += e.Text + "";
+                ProgressValue = (double)i++ / articles.Count();
             };
+
+            await DownLoad(articles, progress);
+        }
+
+        private async Task DownLoad(List<ArticleViewModel> articles
+            , IProgress<DownloadStringTaskAsyncExProgress> progress)
+        {
+            var web = new WebUtility();
+
+            Content = string.Empty;
             foreach (var articleViewModel in articles)
             {
-                var content =await LoadContent(web, articleViewModel,progress).ConfigureAwait(false);
+                var content = await LoadContent(web, articleViewModel, progress).ConfigureAwait(false);
                 await Task.Yield();
                 await SaveToFile(articleViewModel, content, progress).ConfigureAwait(false);
             }
         }
 
         private async Task<string> LoadContent(WebUtility web, ArticleViewModel articleViewModel
-            ,IProgress<DownloadStringTaskAsyncExProgress> progress)
+            , IProgress<DownloadStringTaskAsyncExProgress> progress)
         {
             progress.Report(new DownloadStringTaskAsyncExProgress()
             {
-                Text = string.Format("{0} [Load] {1} ({2}) {0}", Environment.NewLine, articleViewModel.Title, articleViewModel.URL)
+                Text = string.Format("{0} [Load] {1} ({2}) {0}"
+                , Environment.NewLine, articleViewModel.CurrentEntity.Title
+                , articleViewModel.CurrentEntity.URL)
             });
-       
 
-            web.URL = articleViewModel.URL;
+            web.URL = articleViewModel.CurrentEntity.URL;
             string content = web.Get();
             return content;
         }
 
         private static async Task SaveToFile(ArticleViewModel articleViewModel
-            , string content,IProgress<DownloadStringTaskAsyncExProgress> progress )
+            , string content, IProgress<DownloadStringTaskAsyncExProgress> progress)
         {
             progress.Report(new DownloadStringTaskAsyncExProgress()
             {
-                Text = string.Format("{0} [Save] {1} ({2}) {0}", Environment.NewLine, articleViewModel.Title, articleViewModel.URL)
+                Text = string.Format("{0} [Save] {1} ({2}) {0}"
+                , Environment.NewLine
+                , articleViewModel.CurrentEntity.Title
+                , articleViewModel.CurrentEntity.URL)
             });
 
             var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp");
@@ -209,7 +223,7 @@ namespace BlogExporter.Shell.ViewModel
             {
                 Directory.CreateDirectory(folder);
             }
-            var filePath = Path.Combine(folder, articleViewModel.Title.ToValidFileName() + ".htm");
+            var filePath = Path.Combine(folder, articleViewModel.CurrentEntity.Title.ToValidFileName() + ".htm");
             using (var file = new StreamWriter(filePath, false))
             {
                 await file.WriteAsync(content);
@@ -223,7 +237,7 @@ namespace BlogExporter.Shell.ViewModel
     public class DownloadStringTaskAsyncExProgress
     {
         public int ProgressPercentage { get; set; }
+
         public string Text { get; set; }
     }
-
 }

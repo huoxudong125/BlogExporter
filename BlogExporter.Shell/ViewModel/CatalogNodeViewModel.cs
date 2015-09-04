@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
+using Blog.Common.Entities;
 using GalaSoft.MvvmLight;
 
 namespace BlogExporter.Shell.ViewModel
@@ -11,46 +12,22 @@ namespace BlogExporter.Shell.ViewModel
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class CatalogNodeViewModel : ViewModelBase
+    public class CatalogNodeViewModel
     {
-        private string _id;
-        private string _title;
-        private string _content;
+        public Catalog CurrentEntity { get; private set; }
+
         private ObservableCollection<ArticleViewModel> _articlesObservableList;
-        private bool _isChecked;
 
         /// <summary>
         /// Initializes a new instance of the TreeNodeViewModel class.
         /// </summary>
         public CatalogNodeViewModel()
         {
+            CurrentEntity = new Catalog();
             _articlesObservableList=new ObservableCollection<ArticleViewModel>();
             ArticlesCollectionView=new ListCollectionView(_articlesObservableList);
         }
 
-        public string Title
-        {
-            get { return _title; }
-            set { Set(()=>Title, ref _title, value); }
-        }
-
-        public string Id
-        {
-            get { return _id; }
-            set { Set(()=>Id, ref _id, value); }
-        }
-
-        public string Content
-        {
-            get { return _content; }
-            set { Set(()=>Content, ref _content, value); }
-        }
-
-        public bool IsChecked
-        {
-            get { return _isChecked; }
-            set { Set(() => IsChecked, ref _isChecked, value); }
-        }
 
         public ICollectionView ArticlesCollectionView { get; private set; }
 
