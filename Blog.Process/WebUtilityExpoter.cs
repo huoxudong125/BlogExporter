@@ -1,29 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Blog.Common;
 using Blog.Process.Interfaces;
 
 namespace Blog.Process
 {
-   public class WebUtilityExpoter:IExporter
+    public class WebUtilityExpoter : IExporter
     {
-
-       public async Task Export(List<Article> urls)
+        public async Task Export(List<Article> urls)
         {
-           await Export(urls, null);
+            await Export(urls, null);
         }
 
-
-       public async Task Export(List<Article> articles
-           , IProgress<DownloadStringTaskAsyncExProgress> progress=null)
+        public async Task Export(List<Article> articles
+            , IProgress<DownloadStringTaskAsyncExProgress> progress = null)
         {
             var web = new WebUtility();
 
-            
             foreach (var article in articles)
             {
                 var content = await LoadContent(web, article, progress).ConfigureAwait(false);
@@ -76,6 +71,5 @@ namespace Blog.Process
                 file.Close();
             }
         }
-
     }
 }

@@ -3,9 +3,8 @@ using System.Windows.Controls;
 
 namespace BlogExporter.Shell
 {
-
-    //To Demo How to 
-    public  static class ScrollToEndBehavior
+    //To Demo How to
+    public static class ScrollToEndBehavior
     {
         public static readonly DependencyProperty OnTextChangedProperty =
                     DependencyProperty.RegisterAttached(

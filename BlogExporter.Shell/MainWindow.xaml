@@ -66,7 +66,7 @@
                          HorizontalScrollBarVisibility="Auto"
                          VerticalScrollBarVisibility="Auto"
                          HorizontalAlignment="Stretch"
-                         VerticalAlignment="Stretch" 
+                         VerticalAlignment="Stretch"
                      local:ScrollToEndBehavior.OnTextChanged="true"
                      Text="{Binding Content}" />
         </Grid>
@@ -76,10 +76,10 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ProgressBar Grid.Column="1" Height="25" Width="100" 
+                <ProgressBar Grid.Column="1" Height="25" Width="100"
                              Minimum="0" Maximum="1"
-                             Style="{StaticResource GreenProgessStyleGreenProgessStyle}" 
-                             Value="{Binding ProgressValue}"/>
+                             Style="{StaticResource GreenProgessStyleGreenProgessStyle}"
+                             Value="{Binding ProgressValue}" />
             </Grid>
         </StatusBar>
     </Grid>

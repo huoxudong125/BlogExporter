@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 using Blog.Common;
@@ -167,7 +165,7 @@ namespace BlogExporter.Shell.ViewModel
                 }
             }
             var progress = new Progress<DownloadStringTaskAsyncExProgress>();
-             Content = string.Empty;
+            Content = string.Empty;
             int i = 0;
             progress.ProgressChanged += (s, e) =>
             {
@@ -175,14 +173,10 @@ namespace BlogExporter.Shell.ViewModel
                 ProgressValue = (double)i++ / articles.Count();
             };
 
-           
             var exporter = new WebUtilityExpoter();
             await exporter.Export(articles, progress);
         }
 
-      
         #endregion private function
     }
-
-   
 }

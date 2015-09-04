@@ -2,35 +2,36 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Blog.Process
 {
     public class WebUtility
     {
         #region private members
-        HttpWebRequest request = null;
-        HttpWebResponse response = null;
 
-        Uri uri;
-        Encoding encoding = Encoding.UTF8;
-        int timeOut = 3000;
-        CookieContainer cc = new CookieContainer();
-        string referer;
-        string contentType = "application/x-www-form-urlencoded";
-        byte[] data;
+        private HttpWebRequest request = null;
+        private HttpWebResponse response = null;
 
-        Stream stream = null;
+        private Uri uri;
+        private Encoding encoding = Encoding.UTF8;
+        private int timeOut = 3000;
+        private CookieContainer cc = new CookieContainer();
+        private string referer;
+        private string contentType = "application/x-www-form-urlencoded";
+        private byte[] data;
 
-        bool hasError = false;
+        private Stream stream = null;
 
-        bool did = false;
-        #endregion
+        private bool hasError = false;
+
+        private bool did = false;
+
+        #endregion private members
 
         public delegate void WebCallback(string result);
+
         /// <summary>
         /// 回调函数（声明了回调函数则使用异步请求）
         /// </summary>
@@ -40,12 +41,14 @@ namespace Blog.Process
         {
             uri = null;
         }
+
         public WebUtility(string url)
         {
             uri = new Uri(url);
         }
 
         #region 属性
+
         /// <summary>
         /// 设置要请求的URL
         /// </summary>
@@ -53,6 +56,7 @@ namespace Blog.Process
         {
             set { uri = new Uri(value); }
         }
+
         /// <summary>
         /// 指定编码方式(默认:GB2312)
         /// </summary>
@@ -60,6 +64,7 @@ namespace Blog.Process
         {
             set { encoding = value; }
         }
+
         /// <summary>
         /// 设置连接超时时间(ms)
         /// </summary>
@@ -67,6 +72,7 @@ namespace Blog.Process
         {
             set { timeOut = value; }
         }
+
         /// <summary>
         /// 设置/获取CookieContainer
         /// </summary>
@@ -75,6 +81,7 @@ namespace Blog.Process
             get { return cc; }
             set { cc = value; }
         }
+
         /// <summary>
         /// 设置请求链接源
         /// </summary>
@@ -82,6 +89,7 @@ namespace Blog.Process
         {
             set { referer = value; }
         }
+
         /// <summary>
         /// 设置请求的内容类型
         /// </summary>
@@ -89,6 +97,7 @@ namespace Blog.Process
         {
             set { contentType = value; }
         }
+
         /// <summary>
         /// 获取请求返回的cookies
         /// </summary>
@@ -96,6 +105,7 @@ namespace Blog.Process
         {
             get { return did ? cc.GetCookies(uri) : null; }
         }
+
         /// <summary>
         /// 获取请求返回的HTTP标头
         /// </summary>
@@ -103,6 +113,7 @@ namespace Blog.Process
         {
             get { return did ? response.Headers : null; }
         }
+
         /// <summary>
         /// 是否发生错误
         /// </summary>
@@ -111,9 +122,10 @@ namespace Blog.Process
             get { return hasError; }
         }
 
-        #endregion
+        #endregion 属性
 
         #region 提供方法
+
         /// <summary>
         /// GET方式发送请求
         /// </summary>
@@ -143,6 +155,7 @@ namespace Blog.Process
             }
             return msg;
         }
+
         /// <summary>
         /// 获取图片(GET)
         /// </summary>
@@ -171,6 +184,7 @@ namespace Blog.Process
             }
             return bitMap;
         }
+
         /// <summary>
         /// POST方式发送请求
         /// </summary>
@@ -184,6 +198,7 @@ namespace Blog.Process
 
             return Post(this.data);
         }
+
         public string Post(byte[] data)
         {
             this.data = data;
@@ -211,6 +226,7 @@ namespace Blog.Process
             }
             return msg;
         }
+
         /// <summary>
         /// 下载文件
         /// </summary>
@@ -264,13 +280,16 @@ namespace Blog.Process
                 fs.Close();
             }
         }
-        #endregion
+
+        #endregion 提供方法
 
         #region 私有方法
+
         private string Send()
         {
             return Send("GET");
         }
+
         /// <summary>
         /// 发送请求
         /// </summary>
@@ -361,6 +380,7 @@ namespace Blog.Process
             }
             did = true;
         }
+
         private string EncodeData(string data)
         {
             StringBuilder sb = new StringBuilder();
@@ -381,6 +401,7 @@ namespace Blog.Process
             }
             return sb.ToString();
         }
+
         //https
         private bool CheckValidationResult(object sender,
             System.Security.Cryptography.X509Certificates.X509Certificate certificate,
@@ -389,6 +410,7 @@ namespace Blog.Process
         { // Always accept
             return true;
         }
-        #endregion
+
+        #endregion 私有方法
     }
 }

@@ -14,7 +14,7 @@
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1.5">
                                 <GradientBrush.GradientStops>
                                     <GradientStopCollection>
-                                        <GradientStop Color="{Binding RelativeSource={RelativeSource TemplatedParent}, 
+                                        <GradientStop Color="{Binding RelativeSource={RelativeSource TemplatedParent},
                                             Path=(Button.Background).(SolidColorBrush.Color)}" Offset="0" />
                                         <GradientStop Color="{Binding RelativeSource={RelativeSource TemplatedParent},
                                             Path=(Button.Background).(SolidColorBrush.Color)}" Offset="0.4" />
@@ -117,7 +117,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="CircleButtonStyle" BasedOn="{StaticResource GradientButtonStyle}" 
+    <Style x:Key="CircleButtonStyle" BasedOn="{StaticResource GradientButtonStyle}"
            TargetType="{x:Type Button}">
         <Setter Property="Template">
             <Setter.Value>
@@ -247,51 +247,51 @@
     </Style>
 
     <Style TargetType="{x:Type Button}" x:Key="CustomButtonStyle">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="White" />
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FF2778BB" Offset="0.51"/>
-                    <GradientStop Color="#FF2683C5" Offset="0.484"/>
-                    <GradientStop Color="#FF8CD4FF" Offset="1"/>
-                    <GradientStop Color="#FF1973AE" Offset="0.497"/>
+                    <GradientStop Color="#FF2778BB" Offset="0.51" />
+                    <GradientStop Color="#FF2683C5" Offset="0.484" />
+                    <GradientStop Color="#FF8CD4FF" Offset="1" />
+                    <GradientStop Color="#FF1973AE" Offset="0.497" />
                 </LinearGradientBrush>
             </Setter.Value>
         </Setter>
-        <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="BorderBrush" Value="#FF2B5F91"/>
-        <Setter Property="Margin" Value="1"/>
-        <Setter Property="Height" Value="30"/>
-        <Setter Property="MinWidth" Value="20"/>
-        <Setter Property="FontSize" Value="13"/>
-        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderBrush" Value="#FF2B5F91" />
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="MinWidth" Value="20" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Grid>
-                        <Rectangle Stroke="{TemplateBinding BorderBrush}" RadiusX="15" RadiusY="15" Fill="{TemplateBinding Background}"/>
+                        <Rectangle Stroke="{TemplateBinding BorderBrush}" RadiusX="15" RadiusY="15" Fill="{TemplateBinding Background}" />
                         <Rectangle VerticalAlignment="Top" Height="10" Margin="7,2,7,1" RadiusX="10" RadiusY="10">
                             <Rectangle.Fill>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                    <GradientStop Color="#11FFFFFF" Offset="1"/>
-                                    <GradientStop Color="#B2FFFFFF" Offset="0"/>
+                                    <GradientStop Color="#11FFFFFF" Offset="1" />
+                                    <GradientStop Color="#B2FFFFFF" Offset="0" />
                                 </LinearGradientBrush>
                             </Rectangle.Fill>
                         </Rectangle>
-                        <Rectangle x:Name="rectangle" RadiusX="15" RadiusY="15" Fill="White" Margin="1" Opacity="0"/>
-                        <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" Margin="{TemplateBinding Padding}"/>
+                        <Rectangle x:Name="rectangle" RadiusX="15" RadiusY="15" Fill="White" Margin="1" Opacity="0" />
+                        <ContentPresenter x:Name="contentPresenter" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" Margin="{TemplateBinding Padding}" />
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Opacity" TargetName="rectangle" Value="0.2"/>
+                            <Setter Property="Opacity" TargetName="rectangle" Value="0.2" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Opacity" TargetName="rectangle" Value="0.3"/>
+                            <Setter Property="Opacity" TargetName="rectangle" Value="0.3" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Fill" TargetName="rectangle" Value="#666"/>
-                            <Setter Property="Opacity" TargetName="rectangle" Value="0.6"/>
-                            <Setter Property="Opacity" TargetName="contentPresenter" Value="0.3"/>
+                            <Setter Property="Fill" TargetName="rectangle" Value="#666" />
+                            <Setter Property="Opacity" TargetName="rectangle" Value="0.6" />
+                            <Setter Property="Opacity" TargetName="contentPresenter" Value="0.3" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Windows.Data;
 using Blog.Common.Entities;
-using GalaSoft.MvvmLight;
 
 namespace BlogExporter.Shell.ViewModel
 {
@@ -24,16 +23,15 @@ namespace BlogExporter.Shell.ViewModel
         public CatalogNodeViewModel()
         {
             CurrentEntity = new Catalog();
-            _articlesObservableList=new ObservableCollection<ArticleViewModel>();
-            ArticlesCollectionView=new ListCollectionView(_articlesObservableList);
+            _articlesObservableList = new ObservableCollection<ArticleViewModel>();
+            ArticlesCollectionView = new ListCollectionView(_articlesObservableList);
         }
-
 
         public ICollectionView ArticlesCollectionView { get; private set; }
 
         internal void AddArticle(ArticleViewModel articleViewModel)
         {
-           _articlesObservableList.Add(articleViewModel);
+            _articlesObservableList.Add(articleViewModel);
         }
     }
 }

@@ -4,7 +4,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ButtonDictionary.xaml" />
         <ResourceDictionary Source="ScrollViewerStyle.xaml" />
-        <ResourceDictionary Source="ColorButtonDictionary.xaml"/>
-        <ResourceDictionary Source="ProgressDictionary.xaml"/>
+        <ResourceDictionary Source="ColorButtonDictionary.xaml" />
+        <ResourceDictionary Source="ProgressDictionary.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

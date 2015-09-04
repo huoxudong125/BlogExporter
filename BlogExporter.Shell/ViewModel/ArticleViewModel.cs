@@ -11,8 +11,8 @@ namespace BlogExporter.Shell.ViewModel
     /// </summary>
     public class ArticleViewModel : ViewModelBase
     {
-
         public Article CurrentEntity { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the ArchiveViewModel class.
         /// </summary>
@@ -20,7 +20,5 @@ namespace BlogExporter.Shell.ViewModel
         {
             CurrentEntity = new Article();
         }
-
- 
     }
 }
