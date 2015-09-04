@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace BlogExporter.Shell.Utility
+namespace Blog.Common
 {
-    internal static class StringExtend
+    public static class StringExtend
     {
         public static string ClearNotWords(this string str)
         {

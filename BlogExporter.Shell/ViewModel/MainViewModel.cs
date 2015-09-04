@@ -7,8 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
+using Blog.Common;
 using Blog.Process;
-using BlogExporter.Shell.Utility;
+using Blog.Process.Interfaces;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using HtmlAgilityPack;
@@ -157,87 +158,31 @@ namespace BlogExporter.Shell.ViewModel
 
         private async void OnExport()
         {
-            var articles = new List<ArticleViewModel>();
+            var articles = new List<Article>();
             foreach (var catalog in _catalogObservableList)
             {
                 foreach (var article in catalog.ArticlesCollectionView)
                 {
-                    articles.Add(article as ArticleViewModel);
+                    articles.Add(((ArticleViewModel)article).CurrentEntity);
                 }
             }
             var progress = new Progress<DownloadStringTaskAsyncExProgress>();
-
+             Content = string.Empty;
             int i = 0;
             progress.ProgressChanged += (s, e) =>
             {
-                //MessageBox.Show(e.ProgressPercentage + "");
                 Content += e.Text + "";
                 ProgressValue = (double)i++ / articles.Count();
             };
 
-            await DownLoad(articles, progress);
+           
+            var exporter = new WebUtilityExpoter();
+            await exporter.Export(articles, progress);
         }
 
-        private async Task DownLoad(List<ArticleViewModel> articles
-            , IProgress<DownloadStringTaskAsyncExProgress> progress)
-        {
-            var web = new WebUtility();
-
-            Content = string.Empty;
-            foreach (var articleViewModel in articles)
-            {
-                var content = await LoadContent(web, articleViewModel, progress).ConfigureAwait(false);
-                await Task.Yield();
-                await SaveToFile(articleViewModel, content, progress).ConfigureAwait(false);
-            }
-        }
-
-        private async Task<string> LoadContent(WebUtility web, ArticleViewModel articleViewModel
-            , IProgress<DownloadStringTaskAsyncExProgress> progress)
-        {
-            progress.Report(new DownloadStringTaskAsyncExProgress()
-            {
-                Text = string.Format("{0} [Load] {1} ({2}) {0}"
-                , Environment.NewLine, articleViewModel.CurrentEntity.Title
-                , articleViewModel.CurrentEntity.URL)
-            });
-
-            web.URL = articleViewModel.CurrentEntity.URL;
-            string content = await Task.Run(()=> web.Get()).ConfigureAwait(false);
-            return content;
-        }
-
-        private static async Task SaveToFile(ArticleViewModel articleViewModel
-            , string content, IProgress<DownloadStringTaskAsyncExProgress> progress)
-        {
-            progress.Report(new DownloadStringTaskAsyncExProgress()
-            {
-                Text = string.Format("{0} [Save] {1} ({2}) {0}"
-                , Environment.NewLine
-                , articleViewModel.CurrentEntity.Title
-                , articleViewModel.CurrentEntity.URL)
-            });
-
-            var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp");
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-            var filePath = Path.Combine(folder, articleViewModel.CurrentEntity.Title.ToValidFileName() + ".htm");
-            using (var file = new StreamWriter(filePath, false))
-            {
-                await file.WriteAsync(content);
-                file.Close();
-            }
-        }
-
+      
         #endregion private function
     }
 
-    public class DownloadStringTaskAsyncExProgress
-    {
-        public int ProgressPercentage { get; set; }
-
-        public string Text { get; set; }
-    }
+   
 }

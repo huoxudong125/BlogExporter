@@ -94,7 +94,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Behaviors\ScrollToEndBehavior.cs" />
-    <Compile Include="Utility\StringExtend.cs" />
     <Compile Include="ViewModel\ArticleViewModel.cs" />
     <Compile Include="ViewModel\CatalogNodeViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs">
