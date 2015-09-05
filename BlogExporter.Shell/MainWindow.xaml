@@ -22,6 +22,7 @@
                     Style="{StaticResource CircleButton}" Background="#FF499E1E" >Go</Button>
             <Button  Command="{Binding ParseUrlCommand}" Style="{StaticResource NewGameButtonStyle}">Analyse</Button>
             <Button Command="{Binding ExportCommand}" Style="{StaticResource NewGameButtonStyle}">Export</Button>
+            <Button Command="{Binding GetUrlsCommand}" Style="{StaticResource NewGameButtonStyle}">GetUrls</Button>
 
         </ToolBar>
         <ScrollViewer Grid.Row="1" Style="{StaticResource for_scrollviewer}"

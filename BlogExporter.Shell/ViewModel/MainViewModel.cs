@@ -46,6 +46,7 @@ namespace BlogExporter.Shell.ViewModel
             LoadUrlCommand = new RelayCommand(OnLoadUrl);
             ParseUrlCommand = new RelayCommand(OnParseUrl, () => !string.IsNullOrEmpty(URL));
             ExportCommand = new RelayCommand(OnExport);
+            GetUrlsCommand = new RelayCommand(OnGetUrls);
 
             _catalogObservableList = new ObservableCollection<CatalogNodeViewModel>();
             CatalogCollectionView = new ListCollectionView(_catalogObservableList);
@@ -69,6 +70,7 @@ namespace BlogExporter.Shell.ViewModel
             }
         }
 
+    
         #endregion .octor
 
         #region Command
@@ -78,6 +80,8 @@ namespace BlogExporter.Shell.ViewModel
         public ICommand ParseUrlCommand { get; private set; }
 
         public ICommand ExportCommand { get; private set; }
+
+        public ICommand GetUrlsCommand { get; private set; }
 
         #endregion Command
 
@@ -185,6 +189,30 @@ namespace BlogExporter.Shell.ViewModel
             var exporter = new WebUtilityExpoter();
             await exporter.Export(articles, progress);
         }
+
+
+        private void OnGetUrls()
+        {
+            var cnblog = new CnblogProcess();
+            ScrapingBrowser browser = new ScrapingBrowser();
+            var htmlDocument = new HtmlDocument();
+            var html=browser.DownloadString(new Uri("http://news.baidu.com"));
+            htmlDocument.LoadHtml(html);
+            IEnumerable<HtmlNode> links = htmlDocument.DocumentNode.Descendants("a")
+                .Where(x => x.Attributes.Contains("href"));
+
+            Content = string.Empty;
+            foreach (var link in links)
+            {
+                var linktext = string.Format("Link href={0}, link text={1}"
+                    , link.Attributes["href"].Value, link.InnerText);
+                Console.WriteLine(linktext);
+                Content += linktext;
+            }
+
+
+        }
+
 
         #endregion private function
     }
