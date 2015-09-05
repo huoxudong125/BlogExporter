@@ -11,7 +11,13 @@ namespace BlogExporter.Shell.ViewModel
     /// </summary>
     public class ArticleViewModel : ViewModelBase
     {
+        #region Properties
+
         public Article CurrentEntity { get; set; }
+
+        #endregion Properties
+
+        #region .octor
 
         /// <summary>
         /// Initializes a new instance of the ArchiveViewModel class.
@@ -20,5 +26,7 @@ namespace BlogExporter.Shell.ViewModel
         {
             CurrentEntity = new Article();
         }
+
+        #endregion .octor
     }
 }

@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
         <ToolBar Grid.Row="0">
             <Label VerticalAlignment="Center">URL:</Label>
-            <TextBox Width="400" Text="{Binding URL,UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Width="300" Text="{Binding URL,UpdateSourceTrigger=PropertyChanged}" />
             <Button Command="{Binding LoadUrlCommand}" Width="30" Height="30"
                     Style="{StaticResource CircleButton}" Background="#FF499E1E" >Go</Button>
             <Button  Command="{Binding ParseUrlCommand}" Style="{StaticResource NewGameButtonStyle}">Analyse</Button>

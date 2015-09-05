@@ -13,9 +13,9 @@ namespace BlogExporter.Shell.ViewModel
     /// </summary>
     public class CatalogNodeViewModel
     {
-        public Catalog CurrentEntity { get; private set; }
-
         private ObservableCollection<ArticleViewModel> _articlesObservableList;
+
+        #region .octor
 
         /// <summary>
         /// Initializes a new instance of the TreeNodeViewModel class.
@@ -27,7 +27,15 @@ namespace BlogExporter.Shell.ViewModel
             ArticlesCollectionView = new ListCollectionView(_articlesObservableList);
         }
 
+        #endregion .octor
+
+        #region Properties
+
+        public Catalog CurrentEntity { get; private set; }
+
         public ICollectionView ArticlesCollectionView { get; private set; }
+
+        #endregion Properties
 
         internal void AddArticle(ArticleViewModel articleViewModel)
         {

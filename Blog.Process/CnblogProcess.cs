@@ -1,18 +1,22 @@
 ﻿using System;
-using Blog.Common;
 using Blog.Common.Entities;
-using Blog.Process.Interfaces;
 
 namespace Blog.Process
 {
-    public class CnblogProcess : IBlogProcess
+    public class CnblogProcess : BlogProcessBase
     {
-        public Catalog ParseCatalog(string catalogUrl)
+        public CnblogProcess()
+        {
+            //set UseDefaultCookiesParser as false if a website returns invalid cookies format
+            //browser.UseDefaultCookiesParser = false;
+        }
+
+        public override Catalog ParseCatalog(string catalogUrl)
         {
             throw new NotImplementedException();
         }
 
-        public Article ParseArticle(string articleUrl)
+        public override Article ParseArticle(string articleUrl)
         {
             throw new NotImplementedException();
         }

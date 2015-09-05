@@ -36,11 +36,7 @@ namespace BlogExporter.Shell.ViewModel
         private string _url;
         private double _progressValue;
 
-        public double ProgressValue
-        {
-            get { return _progressValue; }
-            set { Set(() => ProgressValue, ref _progressValue, value); }
-        }
+        #region .octor
 
         /// <summary>
         ///     Initializes a new instance of the MainViewModel class.
@@ -73,11 +69,17 @@ namespace BlogExporter.Shell.ViewModel
             }
         }
 
+        #endregion .octor
+
+        #region Command
+
         public ICommand LoadUrlCommand { get; private set; }
 
         public ICommand ParseUrlCommand { get; private set; }
 
         public ICommand ExportCommand { get; private set; }
+
+        #endregion Command
 
         #region Properties
 
@@ -91,6 +93,12 @@ namespace BlogExporter.Shell.ViewModel
         {
             get { return _content; }
             set { Set(() => Content, ref _content, value); }
+        }
+
+        public double ProgressValue
+        {
+            get { return _progressValue; }
+            set { Set(() => ProgressValue, ref _progressValue, value); }
         }
 
         public ICollectionView CatalogCollectionView { get; private set; }
