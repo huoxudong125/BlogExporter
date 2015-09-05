@@ -1,9 +1,11 @@
-﻿namespace Blog.Process.Interfaces
+﻿using Blog.Common.Entities;
+
+namespace Blog.Process.Interfaces
 {
     public interface IBlogProcess
     {
-        bool ParseCatalog();
+        Catalog ParseCatalog(string catalogUrl);
 
-        bool ParseArticle();
+        Article ParseArticle(string articleUrl);
     }
 }

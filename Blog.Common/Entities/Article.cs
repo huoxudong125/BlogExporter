@@ -1,6 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 
-namespace Blog.Common
+namespace Blog.Common.Entities
 {
     public class Article : ViewModelBase
     {

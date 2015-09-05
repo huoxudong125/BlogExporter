@@ -1,4 +1,4 @@
-﻿using Blog.Common;
+﻿using Blog.Common.Entities;
 using GalaSoft.MvvmLight;
 
 namespace BlogExporter.Shell.ViewModel

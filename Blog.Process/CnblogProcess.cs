@@ -1,16 +1,18 @@
 ﻿using System;
+using Blog.Common;
+using Blog.Common.Entities;
 using Blog.Process.Interfaces;
 
 namespace Blog.Process
 {
     public class CnblogProcess : IBlogProcess
     {
-        public bool ParseCatalog()
+        public Catalog ParseCatalog(string catalogUrl)
         {
             throw new NotImplementedException();
         }
 
-        public bool ParseArticle()
+        public Article ParseArticle(string articleUrl)
         {
             throw new NotImplementedException();
         }

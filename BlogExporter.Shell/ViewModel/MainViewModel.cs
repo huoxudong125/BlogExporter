@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
 using Blog.Common;
+using Blog.Common.Entities;
 using Blog.Process;
 using Blog.Process.Interfaces;
 using GalaSoft.MvvmLight;

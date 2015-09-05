@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Blog.Common;
+using Blog.Common.Entities;
 
 namespace Blog.Process.Interfaces
 {
