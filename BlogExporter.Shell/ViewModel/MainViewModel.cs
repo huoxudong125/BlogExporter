@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 using Blog.Common;
@@ -191,7 +192,7 @@ namespace BlogExporter.Shell.ViewModel
         }
 
 
-        private void OnGetUrls()
+        private async void  OnGetUrls()
         {
             var cnblog = new CnblogProcess();
             ScrapingBrowser browser = new ScrapingBrowser();
@@ -201,18 +202,37 @@ namespace BlogExporter.Shell.ViewModel
             IEnumerable<HtmlNode> links = htmlDocument.DocumentNode.Descendants("a")
                 .Where(x => x.Attributes.Contains("href"));
 
+            var progress = new Progress<DownloadStringTaskAsyncExProgress>();
             Content = string.Empty;
-            foreach (var link in links)
+            int i = 0;
+
+            progress.ProgressChanged += (s, e) =>
             {
-                var linktext = string.Format("Link href={0}, link text={1}"
-                    , link.Attributes["href"].Value, link.InnerText);
-                Console.WriteLine(linktext);
-                Content += linktext;
-            }
+                Content += e.Text + Environment.NewLine;
+                ProgressValue = (double)i++ / links.Count();
+            };
+
+           await OutputLinks(links,progress).ConfigureAwait(false);
 
 
         }
 
+        private async  Task OutputLinks(IEnumerable<HtmlNode> links
+            ,IProgress<DownloadStringTaskAsyncExProgress> progress )
+        {
+
+            foreach (var link in links)
+            {
+                var linktext = string.Format("Link href={0}, link text={1}"
+                    , link.Attributes["href"].Value, link.InnerText);
+                progress.Report(new DownloadStringTaskAsyncExProgress()
+                {
+                    Text = linktext,
+                });
+                await Task.Delay(50);
+            }
+
+        }
 
         #endregion private function
     }

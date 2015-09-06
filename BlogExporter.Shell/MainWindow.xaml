@@ -64,12 +64,13 @@
             <ToolBar Grid.Row="0" Visibility="Collapsed">
             </ToolBar>
 
+            <!--local:ScrollToEndBehavior.OnTextChanged="true"-->
             <TextBox Grid.Row="1"   FontFamily="Arial"
                          HorizontalScrollBarVisibility="Auto"
                          VerticalScrollBarVisibility="Auto"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Stretch"
-                     local:ScrollToEndBehavior.OnTextChanged="true"
+                     
                      Text="{Binding Content}" />
         </Grid>
         <StatusBar Grid.Row="3">
