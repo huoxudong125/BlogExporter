@@ -203,7 +203,7 @@ namespace BlogExporter.Shell.ViewModel
                 .Where(x => x.Attributes.Contains("href"));
 
             var progress = new Progress<DownloadStringTaskAsyncExProgress>();
-            Content = string.Empty;
+            Content =" ";
             int i = 0;
 
             progress.ProgressChanged += (s, e) =>
