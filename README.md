@@ -9,3 +9,4 @@
 
 
 [Html Agility Pack - Massive information extraction from WWW pages](http://www.codeproject.com/Articles/691119/Html-Agility-Pack-Massive-information-extraction-f)     
+[ScrapySharp](https://bitbucket.org/rflechner/scrapysharp/overview)   

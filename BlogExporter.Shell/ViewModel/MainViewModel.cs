@@ -179,7 +179,7 @@ namespace BlogExporter.Shell.ViewModel
                 }
             }
             var progress = new Progress<DownloadStringTaskAsyncExProgress>();
-            Content = string.Empty;
+            Content = " ";
             int i = 0;
             progress.ProgressChanged += (s, e) =>
             {

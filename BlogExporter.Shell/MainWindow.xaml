@@ -5,6 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlogExporter.Shell"
         xmlns:viewModel="clr-namespace:BlogExporter.Shell.ViewModel"
+        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:itelite="clr-namespace:HQF.XSLT.NetHelper.Shell;assembly=ITElite.Projects.WPF.Controls.AvalonEditExtend"
         mc:Ignorable="d"
         Title="Export Blogs" Height="350" Width="574.852">
 
@@ -62,16 +65,19 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <ToolBar Grid.Row="0" Visibility="Collapsed">
-            </ToolBar>
+            </ToolBar>        
 
-            <!--local:ScrollToEndBehavior.OnTextChanged="true"-->
-            <TextBox Grid.Row="1"   FontFamily="Arial"
-                         HorizontalScrollBarVisibility="Auto"
-                         VerticalScrollBarVisibility="Auto"
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Stretch"
-                     
-                     Text="{Binding Content}" />
+            <avalonedit:TextEditor Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" 
+                                   VerticalAlignment="Stretch"
+                                   HorizontalScrollBarVisibility="Auto"
+                                   VerticalScrollBarVisibility="Auto"
+                                   Margin="0 0 0 5" 
+                                   FontFamily="Consolas" SyntaxHighlighting="XML" FontSize="10pt">
+                <i:Interaction.Behaviors>
+                    <itelite:AvalonEditBehaviour GiveMeTheText="{Binding Content}" />
+                </i:Interaction.Behaviors>
+            </avalonedit:TextEditor>
+            
         </Grid>
         <StatusBar Grid.Row="3">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
