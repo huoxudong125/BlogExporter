@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Blog.Common;
 using Blog.Common.Entities;
 using HtmlAgilityPack;
@@ -21,17 +22,19 @@ namespace Blog.Process
             //browser.UseDefaultCookiesParser = false;
         }
 
-        public override List<Catalog> ParseCatalogs(string blogerName)
+        public async override Task<List<Catalog>> ParseCatalogs(string blogerName)
         {
+            await Task.Yield();
+
             var url = string.Format(CatalogsUrlTemplate, blogerName, 1);
             var webIncludeCount = string.Format(CatalogsUrlTemplate, blogerName,2);
-            var catalogPageCount=ExtractCatalogPageCount(webIncludeCount);
+            var catalogPageCount=await ExtractCatalogPageCount(webIncludeCount);
 
             List < Catalog > resultCatalogs=new List<Catalog>();
             for (int i = 1; i < catalogPageCount; i++)
             {
                 url= string.Format(CatalogsUrlTemplate, blogerName, i);
-                resultCatalogs.AddRange(ExtractCatalogsFromWebPage(url)); 
+                resultCatalogs.AddRange(await ExtractCatalogsFromWebPage(url).ConfigureAwait(false)); 
             }
 
             return resultCatalogs;
@@ -39,7 +42,7 @@ namespace Blog.Process
         }
 
 
-        private int ExtractCatalogPageCount(string url)
+        private async Task<int> ExtractCatalogPageCount(string url)
         {
             int pageCount = 1;
             var uri = new Uri(url);
@@ -49,7 +52,7 @@ namespace Blog.Process
             doc.LoadHtml(html1);
             var html = doc.DocumentNode;
 
-            var pagers = html.CssSelect("div.pager");
+            var pagers =await Task.Run(()=>html.CssSelect("div.pager")).ConfigureAwait(false);
 
             if (pagers.Count() > 1)
             {
@@ -61,7 +64,7 @@ namespace Blog.Process
             return pageCount;
         }
 
-        private List<Catalog> ExtractCatalogsFromWebPage(string url)
+        private async Task<List<Catalog>> ExtractCatalogsFromWebPage(string url)
         {
             List<Catalog> reusltCatalogs = new List<Catalog>();
 

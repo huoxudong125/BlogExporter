@@ -14,23 +14,30 @@
     <Grid DataContext="{Binding Main, Source={StaticResource Locator}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="100*" />
             <RowDefinition Height="100*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ToolBar Grid.Row="0">
-            <Label VerticalAlignment="Center">URL:</Label>
-            <TextBox Width="300" Text="{Binding URL,UpdateSourceTrigger=PropertyChanged}" />
-            <Label VerticalAlignment="Center">CnBlogName:</Label>
-            <TextBox Width="80" Text="{Binding CnBlogName,UpdateSourceTrigger=PropertyChanged}" />
-            
-            <Button Command="{Binding LoadUrlCommand}" Width="30" Height="30"
+        <ToolBarPanel>
+            <ToolBar Grid.Row="0">
+                <Label VerticalAlignment="Center">URL:</Label>
+                <TextBox Width="300" Text="{Binding URL,UpdateSourceTrigger=PropertyChanged}" />
+
+                <Button Command="{Binding LoadUrlCommand}" Width="30" Height="30"
                     Style="{StaticResource CircleButton}" Background="#FF499E1E" >Go</Button>
-            <Button  Command="{Binding ParseUrlCommand}" Style="{StaticResource NewGameButtonStyle}">Analyse</Button>
-            <Button Command="{Binding ExportCommand}" Style="{StaticResource NewGameButtonStyle}">Export</Button>
-            <Button Command="{Binding GetUrlsCommand}" Style="{StaticResource NewGameButtonStyle}">GetUrls</Button>
-        </ToolBar>
-        <TreeView  Grid.Row="1"
+                <Button Command="{Binding GetUrlsCommand}" Style="{StaticResource NewGameButtonStyle}">GetUrls</Button>
+            </ToolBar>
+            <ToolBar Grid.Row="1">
+                <Label VerticalAlignment="Center">CnBlogName:</Label>
+                <TextBox Width="80" Text="{Binding CnBlogName,UpdateSourceTrigger=PropertyChanged}" />
+
+                <Button  Command="{Binding ParseUrlCommand}" Style="{StaticResource NewGameButtonStyle}">Analyse</Button>
+                <Button Command="{Binding ExportCommand}" Style="{StaticResource NewGameButtonStyle}">Export</Button>
+            </ToolBar>
+        </ToolBarPanel>
+        
+        <TreeView  Grid.Row="2"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -57,11 +64,11 @@
             </TreeView.Resources>
         </TreeView>
 
-        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+        <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
                       Height="4"
                       Background="LightSkyBlue" />
 
-        <Grid Row="2" MinHeight="100">
+        <Grid Row="3" MinHeight="100">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -80,7 +87,7 @@
                 </i:Interaction.Behaviors>
             </avalonedit:TextEditor>
         </Grid>
-        <StatusBar Grid.Row="3">
+        <StatusBar Grid.Row="4">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

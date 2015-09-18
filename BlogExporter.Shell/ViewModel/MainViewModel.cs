@@ -6,14 +6,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
-using Blog.Common;
 using Blog.Common.Entities;
 using Blog.Process;
 using Blog.Process.Interfaces;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using HtmlAgilityPack;
-using ScrapySharp.Extensions;
 using ScrapySharp.Network;
 
 namespace BlogExporter.Shell.ViewModel
@@ -33,10 +31,10 @@ namespace BlogExporter.Shell.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private readonly ObservableCollection<CatalogNodeViewModel> _catalogObservableList;
-        private string _content;
-        private string _url;
-        private double _progressValue;
         private string _cnBlogName;
+        private string _content;
+        private double _progressValue;
+        private string _url;
 
         #region .octor
 
@@ -74,7 +72,6 @@ namespace BlogExporter.Shell.ViewModel
             }
         }
 
-    
         #endregion .octor
 
         #region Command
@@ -121,23 +118,36 @@ namespace BlogExporter.Shell.ViewModel
 
         #region private function
 
-        private void OnParseUrl()
+        private async void OnParseUrl()
         {
             _catalogObservableList.Clear();
-            IBlogProcess blogProcess=new CnblogProcess();
-            var catalogs = blogProcess.ParseCatalogs(CnBlogName);
-            foreach (var catalog in catalogs)
+
+            var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            Content = "Analyzing...";
+            await Task.Run(() =>
             {
-                var catalogViewModel=new CatalogNodeViewModel(catalog);
-
-                foreach (var article in catalog.Articles)
+                IBlogProcess blogProcess = new CnblogProcess();
+                return blogProcess.ParseCatalogs(CnBlogName);
+            }).ContinueWith(
+                t =>
                 {
-                    var articleViewModel=new ArticleViewModel(article);
-                    catalogViewModel.AddArticle(articleViewModel);
-                }
+                    Content = "Create tree...";
 
-                _catalogObservableList.Add(catalogViewModel);
-            }
+                    foreach (var catalog in t.Result)
+                    {
+                        var catalogViewModel = new CatalogNodeViewModel(catalog);
+
+                        foreach (var article in catalog.Articles)
+                        {
+                            var articleViewModel = new ArticleViewModel(article);
+                            catalogViewModel.AddArticle(articleViewModel);
+                        }
+
+                        _catalogObservableList.Add(catalogViewModel);
+                    }
+
+                    Content = "Analyzing is finished";
+                }, scheduler);
         }
 
         private void OnLoadUrl()
@@ -157,63 +167,58 @@ namespace BlogExporter.Shell.ViewModel
             {
                 foreach (var article in catalog.ArticlesCollectionView)
                 {
-                    articles.Add(((ArticleViewModel)article).CurrentEntity);
+                    articles.Add(((ArticleViewModel) article).CurrentEntity);
                 }
             }
             var progress = new Progress<DownloadStringTaskAsyncExProgress>();
             Content = " ";
-            int i = 0;
+            var i = 0;
             progress.ProgressChanged += (s, e) =>
             {
                 Content += e.Text + "";
-                ProgressValue = (double)i++ / articles.Count();
+                ProgressValue = (double) i++/articles.Count();
             };
 
             var exporter = new WebUtilityExpoter();
             await exporter.Export(articles, progress);
         }
 
-
-        private async void  OnGetUrls()
+        private async void OnGetUrls()
         {
             var cnblog = new CnblogProcess();
-            ScrapingBrowser browser = new ScrapingBrowser();
+            var browser = new ScrapingBrowser();
             var htmlDocument = new HtmlDocument();
-            var html=browser.DownloadString(new Uri("http://news.baidu.com"));
+            var html = browser.DownloadString(new Uri("http://news.baidu.com"));
             htmlDocument.LoadHtml(html);
-            IEnumerable<HtmlNode> links = htmlDocument.DocumentNode.Descendants("a")
+            var links = htmlDocument.DocumentNode.Descendants("a")
                 .Where(x => x.Attributes.Contains("href"));
 
             var progress = new Progress<DownloadStringTaskAsyncExProgress>();
-            Content =" ";
-            int i = 0;
+            Content = " ";
+            var i = 0;
 
             progress.ProgressChanged += (s, e) =>
             {
                 Content += e.Text + Environment.NewLine;
-                ProgressValue = (double)i++ / links.Count();
+                ProgressValue = (double) i++/links.Count();
             };
 
-           await OutputLinks(links,progress).ConfigureAwait(false);
-
-
+            await OutputLinks(links, progress).ConfigureAwait(false);
         }
 
-        private async  Task OutputLinks(IEnumerable<HtmlNode> links
-            ,IProgress<DownloadStringTaskAsyncExProgress> progress )
+        private async Task OutputLinks(IEnumerable<HtmlNode> links
+            , IProgress<DownloadStringTaskAsyncExProgress> progress)
         {
-
             foreach (var link in links)
             {
                 var linktext = string.Format("Link href={0}, link text={1}"
                     , link.Attributes["href"].Value, link.InnerText);
-                progress.Report(new DownloadStringTaskAsyncExProgress()
+                progress.Report(new DownloadStringTaskAsyncExProgress
                 {
-                    Text = linktext,
+                    Text = linktext
                 });
                 await Task.Delay(50);
             }
-
         }
 
         #endregion private function

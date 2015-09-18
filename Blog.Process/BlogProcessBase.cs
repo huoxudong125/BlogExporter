@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Blog.Common.Entities;
 using Blog.Process.Interfaces;
 using HtmlAgilityPack;
@@ -16,7 +17,7 @@ namespace Blog.Process
             _scrapyBrowser = new ScrapingBrowser();
         }
 
-        public abstract List<Catalog> ParseCatalogs(string catalogUrl);
+        public abstract  Task<List<Catalog>> ParseCatalogs(string catalogUrl);
 
         public abstract List<Article> ParseArticles(string articleUrl);
 
