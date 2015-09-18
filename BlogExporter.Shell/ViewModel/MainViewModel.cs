@@ -36,6 +36,7 @@ namespace BlogExporter.Shell.ViewModel
         private string _content;
         private string _url;
         private double _progressValue;
+        private string _cnBlogName;
 
         #region .octor
 
@@ -56,6 +57,7 @@ namespace BlogExporter.Shell.ViewModel
             {
                 // Code runs in Blend --> create design time data.
                 URL = "http://hqfz.cnblgos.com";
+                CnBlogName = "hqfz";
                 var catalog = new CatalogNodeViewModel();
                 catalog.CurrentEntity.Title = "Catalog1";
                 var article = new ArticleViewModel();
@@ -68,6 +70,7 @@ namespace BlogExporter.Shell.ViewModel
             {
                 // Code runs "for real"
                 URL = "http://www.cnblogs.com/artech/default.html?page=1";
+                CnBlogName = "artech";
             }
         }
 
@@ -87,6 +90,12 @@ namespace BlogExporter.Shell.ViewModel
         #endregion Command
 
         #region Properties
+
+        public string CnBlogName
+        {
+            get { return _cnBlogName; }
+            set { Set(ref _cnBlogName, value); }
+        }
 
         public string URL
         {
@@ -115,46 +124,19 @@ namespace BlogExporter.Shell.ViewModel
         private void OnParseUrl()
         {
             _catalogObservableList.Clear();
-            var uri = new Uri(URL);
-            var browser1 = new ScrapingBrowser();
-            var html1 = browser1.DownloadString(uri);
-            var doc = new HtmlDocument();
-            doc.LoadHtml(html1);
-            var html = doc.DocumentNode;
-
-            foreach (var script in doc.DocumentNode.Descendants("script").ToArray())
+            IBlogProcess blogProcess=new CnblogProcess();
+            var catalogs = blogProcess.ParseCatalogs(CnBlogName);
+            foreach (var catalog in catalogs)
             {
-                script.Remove();
-            }
-            foreach (var style in doc.DocumentNode.Descendants("style").ToArray())
-            {
-                style.Remove();
-            }
-            foreach (var comment in doc.DocumentNode.SelectNodes("//comment()").ToArray())
-            {
-                comment.Remove();
-            }
+                var catalogViewModel=new CatalogNodeViewModel(catalog);
 
-            var days = html.CssSelect("div.day");
-            foreach (var day in days)
-            {
-                var title = day.CssSelect("div.dayTitle").First();
-                var catalog = new CatalogNodeViewModel();
-
-                catalog.CurrentEntity.Title = title.InnerText.ClearNotWords();
-                catalog.CurrentEntity.IsChecked = true;
-
-                _catalogObservableList.Add(catalog);
-
-                var atricles = day.CssSelect("div.postTitle");
-                foreach (var atricle in atricles)
+                foreach (var article in catalog.Articles)
                 {
-                    var articleModle = new ArticleViewModel();
-                    articleModle.CurrentEntity.Title = atricle.InnerText.ClearNotWords();
-                    var articleTitleEl = atricle.CssSelect("a.postTitle2");
-                    articleModle.CurrentEntity.URL = articleTitleEl.First().Attributes["href"].Value;
-                    catalog.AddArticle(articleModle);
+                    var articleViewModel=new ArticleViewModel(article);
+                    catalogViewModel.AddArticle(articleViewModel);
                 }
+
+                _catalogObservableList.Add(catalogViewModel);
             }
         }
 

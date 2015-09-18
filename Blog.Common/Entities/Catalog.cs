@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.Collections.Generic;
+using GalaSoft.MvvmLight;
 
 namespace Blog.Common.Entities
 {
@@ -8,6 +9,11 @@ namespace Blog.Common.Entities
         private string _title;
         private string _content;
         private bool _isChecked;
+
+        public Catalog()
+        {
+            Articles=new HashSet<Article>();
+        }
 
         public string Title
         {
@@ -32,5 +38,7 @@ namespace Blog.Common.Entities
             get { return _isChecked; }
             set { Set(() => IsChecked, ref _isChecked, value); }
         }
+
+        public virtual HashSet<Article> Articles { get; set; }
     }
 }

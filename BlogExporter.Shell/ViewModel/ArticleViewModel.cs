@@ -19,12 +19,16 @@ namespace BlogExporter.Shell.ViewModel
 
         #region .octor
 
+        public ArticleViewModel() : this(new Article())
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the ArchiveViewModel class.
         /// </summary>
-        public ArticleViewModel()
+        public ArticleViewModel(Article article)
         {
-            CurrentEntity = new Article();
+            CurrentEntity = article;
         }
 
         #endregion .octor

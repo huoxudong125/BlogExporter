@@ -20,11 +20,17 @@ namespace BlogExporter.Shell.ViewModel
         /// <summary>
         /// Initializes a new instance of the TreeNodeViewModel class.
         /// </summary>
-        public CatalogNodeViewModel()
+        public CatalogNodeViewModel():this(new Catalog())
         {
-            CurrentEntity = new Catalog();
+          
+        }
+
+        public CatalogNodeViewModel(Catalog catalog)
+        {
+            CurrentEntity = catalog;
             _articlesObservableList = new ObservableCollection<ArticleViewModel>();
             ArticlesCollectionView = new ListCollectionView(_articlesObservableList);
+
         }
 
         #endregion .octor

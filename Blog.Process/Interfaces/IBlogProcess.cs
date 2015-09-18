@@ -1,11 +1,12 @@
-﻿using Blog.Common.Entities;
+﻿using System.Collections.Generic;
+using Blog.Common.Entities;
 
 namespace Blog.Process.Interfaces
 {
     public interface IBlogProcess
     {
-        Catalog ParseCatalog(string catalogUrl);
+        List<Catalog> ParseCatalogs(string catalogUrl);
 
-        Article ParseArticle(string articleUrl);
+        List<Article> ParseArticles(string articleUrl);
     }
 }
