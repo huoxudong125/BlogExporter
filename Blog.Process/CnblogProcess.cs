@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Blog.Common;
@@ -26,6 +27,7 @@ namespace Blog.Process
             //set UseDefaultCookiesParser as false if a website returns invalid cookies format
             //browser.UseDefaultCookiesParser = false;
             web = new WebUtility();
+            web.Encode=Encoding.UTF8;
         }
 
         public async override Task<List<Catalog>> ParseCatalogs(string blogerName)
@@ -53,6 +55,7 @@ namespace Blog.Process
             int pageCount = 1;
             var uri = new Uri(url);
             var browser1 = new ScrapingBrowser();
+            browser1.Encoding=Encoding.UTF8;
             var html1 = browser1.DownloadString(uri);
             var doc = new HtmlDocument();
             doc.LoadHtml(html1);
@@ -76,7 +79,9 @@ namespace Blog.Process
 
             var uri = new Uri(url);
             var browser1 = new ScrapingBrowser();
+            browser1.Encoding = Encoding.UTF8;
             var html1 = browser1.DownloadString(uri);
+          
             var doc = new HtmlDocument();
             doc.LoadHtml(html1);
             var html = doc.DocumentNode;

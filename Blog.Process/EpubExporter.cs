@@ -15,21 +15,19 @@ namespace Blog.Process
     {
         private readonly string _title = "test" + DateTime.Now.ToString("yyyyMMddhhmmss");
         private readonly List<Article> articlesList = new List<Article>();
-        private readonly string baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Temp_Epub\");
+        private string baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Temp\Epub\HQFZ");
         private readonly Encoding encode = Encoding.GetEncoding("UTF-8"); //gb18030
 
         public async Task Export(List<Article> urls, IBlogProcess process
             , IProgress<DownloadStringTaskAsyncExProgress> progress)
         {
-            if (!Directory.Exists(baseDir))
-            {
-                Directory.CreateDirectory(baseDir);
-            }
+            await Init(progress);
+            articlesList.Clear();
+            articlesList.AddRange(urls);
 
-            var artUrls = urls.Select(t => t.URL).ToArray();
-            if (artUrls.Any())
+            if (articlesList.Any())
             {
-                Build1(process, progress);
+                await Build1(process, progress);
             }
 
             if (progress != null)
@@ -43,15 +41,48 @@ namespace Blog.Process
 
             BuildTable();
             Compile();
+
+            if (progress != null)
+            {
+                progress.Report(new DownloadStringTaskAsyncExProgress
+                {
+                    ProgressPercentage = 1f,
+                    Text = "成功导出"
+                });
+            }
+        }
+
+        private async Task Init(IProgress<DownloadStringTaskAsyncExProgress> progress)
+        {
+            if (Directory.Exists(baseDir))
+            {
+                Directory.Delete(baseDir, true);
+            }
+            Directory.CreateDirectory(baseDir);
+            baseDir += "\\";
+
+            if (progress != null)
+            {
+                progress.Report(new DownloadStringTaskAsyncExProgress() { Text = "正在准备EPUB必须文件" });
+            }
+
+            Directory.CreateDirectory(baseDir + "META-INF");
+            CreateFile(baseDir + "META-INF\\container.xml", strContainer);
+            CreateFile(baseDir + "mimetype", strMimetype);
+            WebUtility web = new WebUtility();
+            web.URL = strCover;
+            web.DownloadFile(baseDir + "cover.png");
+            CreateFile(baseDir + "stylesheet.css", strStyle);
+            CreateFile(baseDir + "titlepage.xhtml", strTitlepage);
         }
 
         private async Task Build1(IBlogProcess process, IProgress<DownloadStringTaskAsyncExProgress> progress)
-        {          
+        {
             var cnt = articlesList.Count;
             for (var i = cnt - 1; i >= 0; i--)
             {
                 var entity = articlesList[i];
-                
+
                 if (progress != null)
                 {
                     progress.Report(new DownloadStringTaskAsyncExProgress
