@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Blog.Common.Entities;
 
@@ -8,6 +9,7 @@ namespace Blog.Process.Interfaces
     {
         Task<List<Catalog>> ParseCatalogs(string catalogUrl);
 
-        List<Article> ParseArticles(string articleUrl);
+        Task<bool> ExtractArticleContent(Article article
+            , IProgress<DownloadStringTaskAsyncExProgress> progress);
     }
 }

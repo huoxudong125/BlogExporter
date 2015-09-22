@@ -179,8 +179,13 @@ namespace BlogExporter.Shell.ViewModel
                 ProgressValue = (double) i++/articles.Count();
             };
 
-            var exporter = new WebUtilityExpoter();
-            await exporter.Export(articles, progress);
+            IExporter exporter = new WebUtilityExpoter();
+            IBlogProcess blogProcess = new CnblogProcess();
+
+            await exporter.Export(articles, blogProcess, progress);
+
+            //exporter = new EpubExporter();
+            //await exporter.Export(articles, blogProcess, progress);
         }
 
         private async void OnGetUrls()

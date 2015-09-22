@@ -19,7 +19,8 @@ namespace Blog.Process
 
         public abstract  Task<List<Catalog>> ParseCatalogs(string catalogUrl);
 
-        public abstract List<Article> ParseArticles(string articleUrl);
+        public abstract Task<bool> ExtractArticleContent(Article article
+            , IProgress<DownloadStringTaskAsyncExProgress> progress);
 
         #region Protected
 

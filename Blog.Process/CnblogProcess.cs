@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Blog.Common;
 using Blog.Common.Entities;
+using Blog.Process.Interfaces;
 using HtmlAgilityPack;
 using ScrapySharp.Extensions;
 using ScrapySharp.Network;
@@ -15,11 +16,16 @@ namespace Blog.Process
     public class CnblogProcess : BlogProcessBase
     {
         private string CatalogsUrlTemplate=@"http://www.cnblogs.com/{0}/default.aspx?page={1}&onlytitle=1";
+        private Regex reg_con = new Regex(@"<div id=""cnblogs_post_body"">([\s\S]+)</div><div id=""MySignature"">"
+            , RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private WebUtility web;
+
 
         public CnblogProcess()
         {
             //set UseDefaultCookiesParser as false if a website returns invalid cookies format
             //browser.UseDefaultCookiesParser = false;
+            web = new WebUtility();
         }
 
         public async override Task<List<Catalog>> ParseCatalogs(string blogerName)
@@ -113,9 +119,54 @@ namespace Blog.Process
             return reusltCatalogs;
         }
 
-        public override List<Article> ParseArticles(string articleUrl)
+        public override async Task<bool> ExtractArticleContent(Article article
+            ,IProgress<DownloadStringTaskAsyncExProgress> progress )
         {
-            throw new NotImplementedException();
+            if (article.IsLoaded)
+            {
+                return true;
+            }
+
+            web.URL = article.URL;
+            if (progress != null)
+            {
+                progress.Report(new DownloadStringTaskAsyncExProgress()
+                {
+                    Text = string.Format("{0} [Load] {1} ({2}) {0}"
+                    , Environment.NewLine, article.Title
+                    , article.URL)
+                });
+            }
+
+            string content = await Task.Run(() => web.Get()).ConfigureAwait(false);
+            Match match = reg_con.Match(content);
+            if (match.Success)
+            {
+                content = match.Groups[1].Value.Trim();
+                article.Content= htmlString.Replace("{0}", article.Title).Replace("\n{1}", content);
+                article.IsLoaded=true;
+            }
+            return match.Success;
         }
+
+
+        #region string template
+        string htmlString = @"<!doctype html>
+<html dir=""ltr"" lang=""zh-CN"">
+<head>
+<title>{0}</title>
+<meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"" />
+<style type=""text/css"">
+body {font:normal 12px/24px Arial, Helvetica, sans-serif; background:#D9F0DB;}
+textarea,pre {font-family:Courier; font-size:12px;}
+</style>
+</head>
+<body>
+<p><a href='_index.htm'>&lt;&lt;目录</a></p>
+{1}
+<p><a href='_index.htm'>&lt;&lt;目录</a></p>
+</body>
+</html>";
+        #endregion
     }
 }
