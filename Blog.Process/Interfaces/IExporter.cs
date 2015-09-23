@@ -8,7 +8,7 @@ namespace Blog.Process.Interfaces
     public interface IExporter
     {
 
-        Task Export(List<Article> articles, IBlogProcess processer
+        Task Export(string fileName,List<Article> articles, IBlogProcess processer
             , IProgress<DownloadStringTaskAsyncExProgress> progress = null);
     }
 }

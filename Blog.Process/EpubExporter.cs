@@ -15,13 +15,13 @@ namespace Blog.Process
     {
         private readonly string _title = "test" + DateTime.Now.ToString("yyyyMMddhhmmss");
         private readonly List<Article> articlesList = new List<Article>();
-        private string baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Temp\Epub\HQFZ");
+        private string baseDir  ;
         private readonly Encoding encode = Encoding.GetEncoding("UTF-8"); //gb18030
 
-        public async Task Export(List<Article> urls, IBlogProcess process
+        public async Task Export(string fileName, List<Article> urls, IBlogProcess process
             , IProgress<DownloadStringTaskAsyncExProgress> progress)
         {
-            await Init(progress);
+            await Init(fileName,progress);
             articlesList.Clear();
             articlesList.AddRange(urls);
 
@@ -52,8 +52,9 @@ namespace Blog.Process
             }
         }
 
-        private async Task Init(IProgress<DownloadStringTaskAsyncExProgress> progress)
+        private async Task Init(string fileName, IProgress<DownloadStringTaskAsyncExProgress> progress)
         {
+            baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Temp\Epub\" + fileName);
             if (Directory.Exists(baseDir))
             {
                 Directory.Delete(baseDir, true);

@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="Interfaces\IBlogProcess.cs" />
     <Compile Include="Interfaces\IExporter.cs" />
+    <Compile Include="PdfExporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebUtility.cs" />
     <Compile Include="WebUtilityExpoter.cs">

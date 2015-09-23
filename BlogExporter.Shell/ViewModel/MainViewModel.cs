@@ -182,10 +182,10 @@ namespace BlogExporter.Shell.ViewModel
             IExporter exporter = new WebUtilityExpoter();
             IBlogProcess blogProcess = new CnblogProcess();
 
-            //await exporter.Export(articles, blogProcess, progress);
+            await exporter.Export(CnBlogName, articles, blogProcess, progress);
 
             exporter = new EpubExporter();
-            await exporter.Export(articles, blogProcess, progress);
+            await exporter.Export(CnBlogName,articles, blogProcess, progress);
         }
 
         private async void OnGetUrls()
