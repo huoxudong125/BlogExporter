@@ -33,7 +33,7 @@ namespace Blog.Process
         public async override Task<List<Catalog>> ParseCatalogs(string blogerName)
         {
             await Task.Yield();
-
+            _blogName = blogerName;
             var url = string.Format(CatalogsUrlTemplate, blogerName, 1);
             var webIncludeCount = string.Format(CatalogsUrlTemplate, blogerName,2);
             var catalogPageCount=await ExtractCatalogPageCount(webIncludeCount);
@@ -50,7 +50,7 @@ namespace Blog.Process
         }
 
 
-        private async Task<int> ExtractCatalogPageCount(string url)
+        public async Task<int> ExtractCatalogPageCount(string url)
         {
             int pageCount = 1;
             var uri = new Uri(url);
@@ -63,12 +63,27 @@ namespace Blog.Process
 
             var pagers =await Task.Run(()=>html.CssSelect("div.pager")).ConfigureAwait(false);
 
-            if (pagers.Count() > 1)
+            var htmlNodes = pagers as IList<HtmlNode> ?? pagers.ToList();
+
+            if (htmlNodes.Any())
             {
-         
-                var mp = Regex.Match(pagers.First().InnerText, @"共(\d+)页");
+                var mp = Regex.Match(htmlNodes.First().InnerText, @"共(\d+)页");
                 if (mp.Success) pageCount= int.Parse(mp.Groups[1].Value);
             }
+            else
+            {
+                var pagerLinks = html.CssSelect("div#pager>a").Select(t => t.InnerText).ToList();
+                if (!int.TryParse(pagerLinks.Last(),out pageCount))
+                {
+                    pagerLinks.RemoveAt(pagerLinks.Count-1);
+                    pagerLinks.Last(t => int.TryParse(t, out pageCount));
+                    pageCount = await ExtractCatalogPageCount(string.Format(CatalogsUrlTemplate,_blogName, pageCount));
+                }
+
+            }
+
+          
+           
 
             return pageCount;
         }
@@ -100,25 +115,49 @@ namespace Blog.Process
             }
 
             var days = html.CssSelect("div.day");
+            if (!days.Any())
+            {
+                days = html.CssSelect("div#container >div#wrapper >div#content");
+            }
+
             foreach (var day in days)
             {
-                var title = day.CssSelect("div.dayTitle").First();
+              
                 var catalog = new Catalog();
-
-                catalog.Title = title.InnerText.ClearNotWords();
                 catalog.IsChecked = true;
+                var title = day.CssSelect("div.dayTitle").FirstOrDefault();
+                if(title!=null)
+                {                 
+                catalog.Title = title.InnerText.ClearNotWords();
+                var atricles = day.CssSelect("div.postTitle");
+                 foreach (var atricle in atricles)
+                 {
+                     var article = new Article();
+                     article.Title = atricle.InnerText.ClearNotWords();
+                     var articleTitleEl = atricle.CssSelect("a.postTitle2");
+                     article.URL = articleTitleEl.First().Attributes["href"].Value;
+                     catalog.Articles.Add(article);
+                 }
+                }
+                else
+                {
+                    catalog.Title = "CataLog"+DateTime.Now.ToShortTimeString();
+
+                    var atricles = day.CssSelect("div.post");
+                    foreach (var atricle in atricles)
+                    {
+                        var article = new Article();
+                      
+                        var articleTitleEl = atricle.CssSelect("a.PostTitle");
+                        article.Title = articleTitleEl.First().InnerText.ClearNotWords();
+                        article.URL = articleTitleEl.First().Attributes["href"].Value;
+                        catalog.Articles.Add(article);
+                    }
+                }
 
                 reusltCatalogs.Add(catalog);
-
-                var atricles = day.CssSelect("div.postTitle");
-                foreach (var atricle in atricles)
-                {
-                    var article = new Article();
-                    article.Title = atricle.InnerText.ClearNotWords();
-                    var articleTitleEl = atricle.CssSelect("a.postTitle2");
-                    article.URL = articleTitleEl.First().Attributes["href"].Value;
-                    catalog.Articles.Add(article);
-                }
+                
+              
             }
 
             return reusltCatalogs;
@@ -172,6 +211,7 @@ textarea,pre {font-family:Courier; font-size:12px;}
 <p><a href='_index.htm'>&lt;&lt;目录</a></p>
 </body>
 </html>";
+        private string _blogName;
         #endregion
     }
 }
